@@ -1,0 +1,16 @@
+﻿technology,fuel,value
+SolarPV,Power,1
+CoalMine,Coal,1
+GasExtractor,Gas,1
+CoalPowerPlant,Power,1
+GasPowerPlant,Power,1
+CoalCHPPlant,Power,0.4
+CoalCHPPlant,Heat,0.6
+GasCHPPlant,Power,0.4
+GasCHPPlant,Heat,0.6
+Power2Gas,H2,1
+H2Car,Mobility,1
+BEV,Mobility,1
+LPGCar,Mobility,1
+WindOnshore,Power,1
+ElectricHeater,Heat,1

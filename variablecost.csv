@@ -1,0 +1,14 @@
+﻿technology,value
+SolarPV,0.01
+CoalMine,0.2
+GasExtractor,0.3
+CoalPowerPlant,1
+GasPowerPlant,1
+CoalCHPPlant,1
+GasCHPPlant,1
+Power2Gas,1
+H2Car,1
+BEV,1
+LPGCar,1
+WindOnshore,0.01
+ElectricHeater,0.05

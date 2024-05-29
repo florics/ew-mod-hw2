@@ -1,0 +1,10 @@
+﻿technology,value
+SolarPV,0
+CoalPowerPlant,2
+CoalCHPPlant,2
+GasPowerPlant,1
+GasCHPPlant,1
+Power2Gas,0
+H2Car,0
+BEV,0
+LPGCar,1

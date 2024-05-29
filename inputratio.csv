@@ -1,0 +1,10 @@
+﻿technology,fuel,value
+CoalPowerPlant,Coal,1
+GasPowerPlant,Gas,1
+CoalCHPPlant,Coal,1
+GasCHPPlant,Gas,1
+Power2Gas,Power,2
+H2Car,H2,1
+BEV,Power,1.1
+LPGCar,Gas,1
+ElectricHeater,Power,1.1
