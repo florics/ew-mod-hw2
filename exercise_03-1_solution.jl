@@ -54,6 +54,7 @@ InvestmentCostStorage = readin("investmentcoststorage.csv",dims=1)
 E2PRatio = readin("e2pratio.csv",dims=1)
 StorageChargeEfficiency = readin("storagechargeefficiency.csv",dims=2)
 StorageDischargeEfficiency = readin("storagedischargeefficiency.csv",dims=2)
+StorageLosses = readin("storagelosses.csv",dims=1)
 
 # our emission limit
 EmissionLimit = 5000
@@ -135,19 +136,20 @@ ESM = Model(HiGHS.Optimizer)
 )
 
 @constraint(ESM, StorageLevelFunction[s in storages, h in hour, f in fuels; h>1 && StorageDischargeEfficiency[s,f]>0], 
-    StorageLevel[s,h,f] == StorageLevel[s,h-1,f] + StorageCharge[s,h,f]*StorageChargeEfficiency[s,f] - StorageDischarge[s,h,f]/StorageDischargeEfficiency[s,f]
+    StorageLevel[s,h,f] == StorageLosses[s]*StorageLevel[s,h-1,f] + StorageCharge[s,h,f]*StorageChargeEfficiency[s,f] - StorageDischarge[s,h,f]/StorageDischargeEfficiency[s,f]
 )
 
 @constraint(ESM, StorageLevelStartFunction[s in storages, h in hour, f in fuels; h==1 && StorageDischargeEfficiency[s,f]>0], 
-    StorageLevel[s,h,f] == 0.5*StorageEnergyCapacity[s,f]+ StorageCharge[s,h,f]*StorageChargeEfficiency[s,f] - StorageDischarge[s,h,f]/StorageDischargeEfficiency[s,f]
+    StorageLevel[s,h,f] == 0.5*StorageLosses[s]*StorageEnergyCapacity[s,f]+ StorageCharge[s,h,f]*StorageChargeEfficiency[s,f] - StorageDischarge[s,h,f]/StorageDischargeEfficiency[s,f]
+)
+
+#new constraint, replaces StorageAnnualBalanceFunction
+@constraint(ESM, StorageLevelEndFunction[s in storages, h in hour, f in fuels; h==n_hour && StorageDischargeEfficiency[s,f]>0], 
+    StorageLevel[s,h,f] == 0.5*StorageEnergyCapacity[s,f]
 )
 
 @constraint(ESM, MaxStorageLevelFunction[s in storages, h in hour, f in fuels; StorageDischargeEfficiency[s,f]>0], 
     StorageLevel[s,h,f] <= StorageEnergyCapacity[s,f]
-)
-
-@constraint(ESM, StorageAnnualBalanceFunction[s in storages, f in fuels; StorageDischargeEfficiency[s,f]>0], 
-    sum(StorageCharge[s,h,f] for h in hour)*StorageChargeEfficiency[s,f] - sum(StorageDischarge[s,h,f] for h in hour) / StorageDischargeEfficiency[s,f] == 0
 )
 
 @constraint(ESM, StorageCostFunction[s in storages], 
