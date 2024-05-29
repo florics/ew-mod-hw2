@@ -61,6 +61,9 @@ EmissionLimit = 5000
 # define the dictionary for max capacities with specific default value
 MaxCapacity = readin("maxcapacity.csv", default=999, dims=1)
 
+# define the dictionary for storage max capacities with specific default value
+MaxStorageCapacity = readin("maxstoragecapacity.csv", default=50, dims=1)
+
 ### building the model ###
 # instantiate a model with an optimizer
 ESM = Model(HiGHS.Optimizer)
@@ -149,6 +152,11 @@ ESM = Model(HiGHS.Optimizer)
 
 @constraint(ESM, StorageCostFunction[s in storages], 
     TotalStorageCost[s] == sum(StorageEnergyCapacity[s,f]*InvestmentCostStorage[s] for f in fuels if StorageDischargeEfficiency[s,f]>0)
+)
+
+#new constraint: installed storage capacity is limited by the maximum storage capacity
+@constraint(ESM, MaxStorageCapacityFunction[s in storages],
+     sum(StorageEnergyCapacity[s,f] for f in fuels if StorageDischargeEfficiency[s,f]>0) <= MaxStorageCapacity[s]
 )
 
 
